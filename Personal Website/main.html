@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website - Simão Costa</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="profile text-center">
+                    <img src="img/sica.JPG" alt="Profile Photo" class="img">
+                    <h1>Simão Costa</h1>
+                </div>
+
+                <nav class="nav flex-column text-center">
+                    <a class="nav-link" href="#home" onclick="showSection('home')">Home</a>
+                    <a class="nav-link" href="#about" onclick="showSection('about')">About</a>
+                    <a class="nav-link" href="#skills" onclick="showSection('skills')">Skills</a>
+                    <a class="nav-link" href="#education" onclick="showSection('education')">Education</a>
+                    <a class="nav-link" href="#experience" onclick="showSection('experience')">Experience</a>
+                    <a class="nav-link" href="https://www.linkedin.com/in/your-linkedin-profile" target="_blank">
+                        <img src="img/linkedin.png" alt="LinkedIn" class="linkedin-icon">
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <section id="home">
+                    <h1>I am a Designer</h1>
+                </section>
+                <section id="about" class="hidden">
+                    <h1>About Me</h1>
+                    <p>My name is Simão Costa, and I am [your age] years old.</p>
+                </section>
+                <!-- Add more sections here as needed -->
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

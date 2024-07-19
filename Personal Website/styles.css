@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+}
+
+.sidebar {
+    position: fixed;
+    background-color: #bbbbbb;
+    height: 100%;
+    padding-top: 20px;
+    width: 20%; /* Adjust the width as needed */
+}
+
+.sidebar .profile {
+    padding: 15px;
+}
+
+/* Adjust the size and style of the profile image */
+.sidebar .profile img { 
+    width: 220px; /* Adjust the width as needed */
+    height: 220px; /* Adjust the height as needed */
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image covers the circle without distortion */
+    border: 5px solid #000;
+    margin-bottom: 20px;
+}
+
+.nav-link {
+    color: #333;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #000;
+    font-weight: bold;
+    transform: scale(1.2);
+}
+
+.main-content {
+    margin-left: 20%; /* Adjust margin to match the sidebar width */
+    /*padding: 20px;*/
+}
+
+.main-content section {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.linkedin-icon {
+    width: 24px; /* Adjust the size as needed */
+    height: 24px;
+}
+
+.hidden {
+    display: none;
+}
