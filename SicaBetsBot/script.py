@@ -10,11 +10,11 @@ from selenium.common.exceptions import TimeoutException
 from webdriver_manager.chrome import ChromeDriverManager
 import re
 import time
-from getbrazilurlToday import get_today_game_urls
+from getTodayGames import getTodayGames
 
-# --- Config Telegram ---
-BOT_TOKEN = '8154995039:AAFhWvCaWus5VkA5QJFUZ6ar20vsuNUy9tc'  # O teu token
-CHAT_ID = -1002786394948  # O teu chat ID
+# Config Telegram
+BOT_TOKEN = '8154995039:AAFhWvCaWus5VkA5QJFUZ6ar20vsuNUy9tc'  # token
+CHAT_ID = -1002786394948  # chat ID
 
 async def send_telegram_message(text):
     bot = Bot(token=BOT_TOKEN)
@@ -66,7 +66,7 @@ def extract_added_time(comments):
     return None
 
 try:
-    game_urls = get_today_game_urls()
+    game_urls = getTodayGames()
 
     for game_index, base_url in enumerate(game_urls, 1):
         output = ""  # reset output para este jogo
@@ -196,7 +196,7 @@ try:
             output += f"❌ Ficamos de fora no jogo {home} - {away}: {count_4_or_more}/10 jogos anteriores destas duas equipas tiveram 4 ou mais minutos de compensação na 1ª parte.\n"
 
         print(output)  # Imprime no terminal
-        asyncio.run(send_telegram_message(output))  # Envia a mensagem para o Telegram
+        #asyncio.run(send_telegram_message(output))  # Envia a mensagem para o Telegram
 
 except Exception as e:
     final_error_msg = f"❌ Erro geral: {e}\n"
