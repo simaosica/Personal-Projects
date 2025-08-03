@@ -1,8 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
-# Auxiliary function to get today's games from a specific league
 def getTodayGamesAux(driver, league_name, league_url):
     urls = []
     try:
@@ -10,14 +12,32 @@ def getTodayGamesAux(driver, league_name, league_url):
         print(f"\n🔍 A aceder à liga: {league_name}")
         driver.get(league_url)
 
-        # Verifies if the page has loaded correctly
-        jogos_hoje_titles = driver.find_elements(By.XPATH, '//div[@class="tabs__ear" and contains(text(), "Jogos de Hoje")]')
+        wait = WebDriverWait(driver, 3)
 
-        if not jogos_hoje_titles:
-            print(f"❌  Não há jogos hoje na liga {league_name}.")
+        # Espera o separador "Jogos de Hoje"
+        try:
+            jogos_hoje_title = wait.until(
+                EC.presence_of_element_located(
+                    (By.XPATH, '//div[@class="tabs__ear" and contains(text(), "Jogos de Hoje")]')
+                )
+            )
+        except TimeoutException:
+            print(f"❌ Não há jogos hoje na liga {league_name}.")
             return []
 
-        jogos_hoje_container = jogos_hoje_titles[0].find_element(By.XPATH, '../../..')
+        # Acede ao container principal (sobe 3 níveis)
+        jogos_hoje_container = jogos_hoje_title.find_element(By.XPATH, '../../..')
+
+        # Espera que pelo menos um link de jogo esteja presente
+        try:
+            wait.until(
+                EC.presence_of_element_located(
+                    (By.XPATH, './/div[contains(@id, "g_1_")]//a[contains(@href, "/jogo/futebol/")]')
+                )
+            )
+        except TimeoutException:
+            print(f"⚠️ Não foram encontrados jogos visíveis na liga {league_name}.")
+            return []
 
         match_links = jogos_hoje_container.find_elements(By.XPATH, './/div[contains(@id, "g_1_")]//a[contains(@href, "/jogo/futebol/")]')
 
@@ -27,7 +47,7 @@ def getTodayGamesAux(driver, league_name, league_url):
                 urls.append(href.split("#")[0])
 
         if len(urls) == 0:
-            print(f"⚠️  Não há jogos hoje na liga {league_name}. (Nenhum link encontrado)")
+            print(f"⚠️ Não há jogos hoje na liga {league_name}. (Nenhum link encontrado)")
         else:
             print(f"✅ Encontrado(s) {len(urls)} jogo(s) de hoje na liga {league_name}")
 
@@ -37,7 +57,6 @@ def getTodayGamesAux(driver, league_name, league_url):
         print(f"❌ Erro ao processar {league_name}: {e}")
         return []
 
-# Main function to get today's games from all leagues
 def getTodayGames():
     options = Options()
     options.add_argument("--headless")
@@ -48,7 +67,6 @@ def getTodayGames():
 
     driver = webdriver.Chrome(options=options)
 
-    # Define the leagues and their URLs
     leagues = {
         "Brasil Série A": "https://www.flashscore.pt/futebol/brasil/serie-a/",
         #"Inglaterra Premier League": "https://www.flashscore.pt/futebol/inglaterra/premier-league/",
@@ -70,7 +88,6 @@ def getTodayGames():
     print(f"\nTotal de jogos a analisar hoje: {len(all_urls)}")
     return all_urls
 
-
-# Local testing
+# Para testar localmente
 #if __name__ == "__main__":
 #    jogos_de_hoje = getTodayGames()

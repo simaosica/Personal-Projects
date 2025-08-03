@@ -12,21 +12,17 @@ from selenium.common.exceptions import TimeoutException
 from webdriver_manager.chrome import ChromeDriverManager
 from getTodayGames import getTodayGames
 
-######################## Telegram Configuration ########################
+# Config Telegram
+BOT_TOKEN = '8154995039:AAFhWvCaWus5VkA5QJFUZ6ar20vsuNUy9tc'  # token
+CHAT_ID = -1002786394948  # chat ID
 
-# Telgram Bot configuration
-BOT_TOKEN = '8154995039:AAFhWvCaWus5VkA5QJFUZ6ar20vsuNUy9tc'
-CHAT_ID = -1002786394948
-
-# Send a message to Telegram
 async def send_telegram_message(text):
     bot = Bot(token=BOT_TOKEN)
-    chunk_size = 4000 # Telegram message limit
+    # Telegram tem limite de tamanho por mensagem (4096 chars)
+    chunk_size = 4000
     for i in range(0, len(text), chunk_size):
         chunk = text[i:i+chunk_size]
         await bot.send_message(chat_id=CHAT_ID, text=chunk)
-
-######################## Selenium Configuration ########################
 
 # Setup headless Chrome com otimizações
 chrome_options = Options()
