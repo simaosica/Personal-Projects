@@ -69,7 +69,7 @@ def getTodayGames():
 
     leagues = {
         "Brasil Série A": "https://www.flashscore.pt/futebol/brasil/serie-a/",
-        #"Inglaterra Premier League": "https://www.flashscore.pt/futebol/inglaterra/premier-league/",
+        "Inglaterra Premier League": "https://www.flashscore.pt/futebol/inglaterra/premier-league/",
         #"Espanha La Liga": "https://www.flashscore.pt/futebol/espanha/laliga/",
         #"Alemanha Bundesliga": "https://www.flashscore.pt/futebol/alemanha/bundesliga/",
         #"Itália Serie A": "https://www.flashscore.pt/futebol/italia/serie-a/",
