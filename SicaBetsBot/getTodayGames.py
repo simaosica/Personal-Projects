@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
+# Auxiliary function to get today's games from a specific league
 def getTodayGamesAux(driver, league_name, league_url):
     urls = []
     try:
@@ -9,7 +10,7 @@ def getTodayGamesAux(driver, league_name, league_url):
         print(f"\n🔍 A aceder à liga: {league_name}")
         driver.get(league_url)
 
-        # Verifica se o separador "Jogos de Hoje" existe
+        # Verifies if the page has loaded correctly
         jogos_hoje_titles = driver.find_elements(By.XPATH, '//div[@class="tabs__ear" and contains(text(), "Jogos de Hoje")]')
 
         if not jogos_hoje_titles:
@@ -36,6 +37,7 @@ def getTodayGamesAux(driver, league_name, league_url):
         print(f"❌ Erro ao processar {league_name}: {e}")
         return []
 
+# Main function to get today's games from all leagues
 def getTodayGames():
     options = Options()
     options.add_argument("--headless")
@@ -46,6 +48,7 @@ def getTodayGames():
 
     driver = webdriver.Chrome(options=options)
 
+    # Define the leagues and their URLs
     leagues = {
         "Brasil Série A": "https://www.flashscore.pt/futebol/brasil/serie-a/",
         #"Inglaterra Premier League": "https://www.flashscore.pt/futebol/inglaterra/premier-league/",
@@ -69,5 +72,5 @@ def getTodayGames():
 
 
 # Local testing
-if __name__ == "__main__":
-    jogos_de_hoje = getTodayGames()
+#if __name__ == "__main__":
+#    jogos_de_hoje = getTodayGames()
