@@ -1,5 +1,6 @@
 import asyncio
 import time
+import math
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -103,17 +104,26 @@ def process_game(driver, base_url, game_index, total_games):
         return output
 
     count_3_or_more = 0
-    for i, url in enumerate(match_urls[:2], start=1):  # Adjust how many matches to check here
+    added_times = []
+    for i, url in enumerate(match_urls[:5], start=1):  # Adjust how many matches to check here
         match_output, added_time = process_match(driver, url, i)
         output += match_output
-        if added_time is not None and added_time >= 3:
-            count_3_or_more += 1
+        if added_time is not None:
+            added_times.append(added_time) # Store added time for analysis
+            if added_time >= 3:
+                count_3_or_more += 1
 
-    output += "\n📊 Resultado:\n"
-    if count_3_or_more <= 3:
-        output += f"✅ Vamos estar muito atentos ao jogo {home} - {away}: Apenas {count_3_or_more}/10 jogos anteriores destas duas equipas tiveram 4 ou mais minutos de compensação na 1ª parte.\n"
+    output += "\n📊 Análise do Jogo {home} - {away}:\n"
+    if added_times:
+        avg_time = math.ceil(sum(added_times) / len(added_times)) # Calculate average time and round it up
+        output += f"⏳ Tempo de compensação esperado na 1ª Parte: {avg_time} minuto(s).\n"
     else:
-        output += f"❌ Ficamos de fora no jogo {home} - {away}: {count_3_or_more}/10 jogos anteriores destas duas equipas tiveram 4 ou mais minutos de compensação na 1ª parte.\n"
+        output += "⏳ Sem dados suficientes para calcular o tempo de compensação esperado.\n"
+
+    if count_3_or_more <= 3:
+        output += f"✅ Vamos estar muito atentos ao jogo {home} - {away}: Apenas {count_3_or_more}/10 jogos anteriores destas duas equipas tiveram 3 ou mais minutos de compensação na 1ª parte.\n"
+    else:
+        output += f"❌ Ficamos de fora no jogo {home} - {away}: {count_3_or_more}/10 jogos anteriores destas duas equipas tiveram 3 ou mais minutos de compensação na 1ª parte.\n"
 
     return output
 
