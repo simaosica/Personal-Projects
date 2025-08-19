@@ -121,6 +121,7 @@ def process_game(driver, base_url, game_index, total_games):
             output += f"⏳ Expected 1st Half added time: {avg_expected_time} minute(s).\n"
             output += f"✅ We'll be keeping a close eye on the match {home} - {away}.\n"
         else:
+            output += f"⏳ Expected 1st Half added time: {avg_expected_time} minute(s).\n"
             output += f"❌ We're not sure about the match {home} - {away}.\n"
     else:
         output += "❔ Not enough data to calculate expected added time.\n"
@@ -130,6 +131,7 @@ def process_game(driver, base_url, game_index, total_games):
 
 def main():
     driver = create_headless_chrome_driver()
+    print(f"\n🌍 Getting today's games ({time.strftime('%d-%m-%Y')})...")
 
     try:
         game_urls = getTodayGames()
@@ -147,7 +149,7 @@ def main():
 
     finally:
         if total_games > 0:
-            print("\n ⚠️ If there were any penalties, substitutions, VAR interventions, or red cards, we should ignore them.")
+            print("\n⚠️ If there were any penalties, substitutions, VAR interventions, or red cards, we should ignore them.")
         driver.quit()
 
 

@@ -9,7 +9,7 @@ def getTodayGamesAux(driver, league_name, league_url):
     urls = []
     try:
         driver.delete_all_cookies()
-        print(f"\n🔍 Checking league: {league_name}")
+        #print(f"\n🔍 Checking league: {league_name}")
         driver.get(league_url)
 
         wait = WebDriverWait(driver, 3)
@@ -22,7 +22,7 @@ def getTodayGamesAux(driver, league_name, league_url):
                 )
             )
         except TimeoutException:
-            print(f"❌ No matches today in {league_name}.")
+            #print(f"❌ No matches today in {league_name}.")
             return []
 
         # Access the main container (go up 3 levels)
@@ -36,7 +36,7 @@ def getTodayGamesAux(driver, league_name, league_url):
                 )
             )
         except TimeoutException:
-            print(f"⚠️ NNo visible matches found in {league_name}.")
+            print(f"⚠️ No visible matches found in {league_name}.")
             return []
 
         match_links = jogos_hoje_container.find_elements(By.XPATH, './/div[contains(@id, "g_1_")]//a[contains(@href, "/jogo/futebol/")]')
@@ -48,8 +48,8 @@ def getTodayGamesAux(driver, league_name, league_url):
 
         if len(urls) == 0:
             print(f"⚠️ No matches today in {league_name}. (No links found)")
-        else:
-            print(f"✅ Found {len(urls)} match(es) today in {league_name}")
+        #else:
+        #    print(f"✅ Found {len(urls)} match(es) today in {league_name}.")
 
         return urls
 
@@ -69,11 +69,11 @@ def getTodayGames():
 
     leagues = {
         "Brazil Serie A": "https://www.flashscore.pt/futebol/brasil/serie-a/",
-        "England Premier League": "https://www.flashscore.pt/futebol/inglaterra/premier-league/",
-        "Spain La Liga": "https://www.flashscore.pt/futebol/espanha/laliga/",
-        "Germany Bundesliga": "https://www.flashscore.pt/futebol/alemanha/bundesliga/",
-        "Italy Serie A": "https://www.flashscore.pt/futebol/italia/serie-a/",
-        "France Ligue 1": "https://www.flashscore.pt/futebol/franca/ligue-1/",
+        #"England Premier League": "https://www.flashscore.pt/futebol/inglaterra/premier-league/",
+        #"Spain La Liga": "https://www.flashscore.pt/futebol/espanha/laliga/",
+        #"Germany Bundesliga": "https://www.flashscore.pt/futebol/alemanha/bundesliga/",
+        #"Italy Serie A": "https://www.flashscore.pt/futebol/italia/serie-a/",
+        #"France Ligue 1": "https://www.flashscore.pt/futebol/franca/ligue-1/",
         "Portugal Primeira Liga": "https://www.flashscore.pt/futebol/portugal/primeira-liga/",
         #"UEFA Super Cup": "https://www.flashscore.pt/futebol/europa/super-taca-da-uefa/",
     }
@@ -86,7 +86,7 @@ def getTodayGames():
     finally:
         driver.quit()
 
-    print(f"\nNumber of matches to analyse today: {len(all_urls)}")
+    print(f"⚽ Number of matches to analyse today: {len(all_urls)}")
     return all_urls
 
 # Para testar localmente
