@@ -138,12 +138,12 @@ def main():
         for game_index, base_url in enumerate(game_urls, 1):
             output = process_game(driver, base_url, game_index, total_games)
             print(output)
-            # asyncio.run(send_telegram_message(output))  # Uncomment to send telegram messages
+            #asyncio.run(send_telegram_message(output))  # Uncomment to send telegram messages
 
     except Exception as e:
         final_error_msg = f"❌ Error: {e}\n"
         print(final_error_msg)
-        # asyncio.run(send_telegram_message(final_error_msg)) # Uncomment to send telegram messages
+        #asyncio.run(send_telegram_message(final_error_msg)) # Uncomment to send telegram messages
 
     finally:
         if total_games > 0:
