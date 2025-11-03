@@ -1,7 +1,6 @@
 # 👨‍💻 Personal Projects
 
-Welcome to my collection of personal projects! 🚀  
-This repository serves as a central place to showcase what I’ve built.
+Welcome to my collection of personal projects!vThis repository serves as a central place to showcase what I’ve built.
 
 ---
 
