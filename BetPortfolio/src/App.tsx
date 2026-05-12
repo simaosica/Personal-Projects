@@ -72,8 +72,6 @@ function App() {
   const wonBets = bets.filter((bet) => bet.status === "won").length;
   const lostBets = bets.filter((bet) => bet.status === "lost").length;
   const pendingBets = bets.filter((bet) => bet.status === "pending").length;
-  const settledBets = wonBets + lostBets;
-  const winRate = settledBets > 0 ? (wonBets / settledBets) * 100 : 0;
 
   const totalStake = bets
     .filter((bet) => bet.status !== "pending")
@@ -156,13 +154,12 @@ function App() {
         </div>
 
         <div className="header-actions">
-          <button onClick={() => setIsAddBetModalOpen(true)}>+ Add Bet</button>
+          <button className="blue-button" onClick={() => setIsAddBetModalOpen(true)}>
+            Add Bet
+          </button>
 
-          <button
-            className="blue-button"
-            onClick={() => setIsCreateGroupModalOpen(true)}
-          >
-            + Create Group
+          <button className="blue-button" onClick={() => setIsCreateGroupModalOpen(true)}>
+            Create Group
           </button>
         </div>
       </header>
@@ -189,22 +186,13 @@ function App() {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">◎</div>
-          <div>
-            <p>Win Rate</p>
-            <h2>{winRate.toFixed(1)}%</h2>
-            <span>
-              {wonBets} won / {settledBets} settled
-            </span>
-          </div>
-        </div>
-
-        <div className="stat-card">
           <div className="stat-icon">▣</div>
           <div>
-            <p>Open Bets</p>
-            <h2 className="pending-value">{pendingBets}</h2>
-            <span>Total bets: {totalBets}</span>
+            <p>Total Bets</p>
+            <h2>{totalBets}</h2>
+            <span>
+              {wonBets} won / {lostBets} lost / {pendingBets} pending
+            </span>
           </div>
         </div>
       </section>

@@ -10,11 +10,21 @@ body {
   color: white;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
 main {
-  min-height: 100vh;
+  height: 100vh;
   padding: 32px;
-  max-width: 1500px;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .app-header {
@@ -41,7 +51,7 @@ main {
 
 .header-actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 button {
@@ -55,12 +65,14 @@ button {
 }
 
 button:hover {
-  opacity: 0.9;
+  opacity: 0.8;
+  transition: 0.3s all;
 }
 
 .blue-button {
   background: #2563eb;
   color: white;
+  font-size: 15px;
 }
 
 .secondary-button {
@@ -72,15 +84,15 @@ button:hover {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  margin-bottom: 24px;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
 .stat-card {
   background: linear-gradient(145deg, #172033, #101827);
   border: 1px solid #263449;
   border-radius: 18px;
-  padding: 22px;
+  padding: 15px;
   display: flex;
   gap: 18px;
   align-items: center;
@@ -88,15 +100,15 @@ button:hover {
 }
 
 .stat-icon {
-  width: 58px;
-  height: 58px;
+  width: 55px;
+  height: 55px;
   border-radius: 999px;
   background: rgba(148, 163, 184, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #22c55e;
-  font-size: 26px;
+  font-size: 25px;
   font-weight: bold;
   flex-shrink: 0;
 }
@@ -108,7 +120,7 @@ button:hover {
 
 .stat-card h2 {
   margin: 10px 0;
-  font-size: 30px;
+  font-size: 25px;
 }
 
 .stat-card span {
@@ -124,7 +136,7 @@ button:hover {
   background: linear-gradient(145deg, #101827, #0b1220);
   border: 1px solid #263449;
   border-radius: 18px;
-  padding: 22px;
+  padding: 15px;
   margin-bottom: 28px;
 }
 
@@ -189,7 +201,7 @@ select {
 }
 
 .groups-section {
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .section-header {
@@ -213,7 +225,7 @@ select {
   background: linear-gradient(145deg, #172033, #101827);
   border: 1px solid #263449;
   border-radius: 18px;
-  padding: 22px;
+  padding: 15px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
 }
 
@@ -230,8 +242,8 @@ select {
 }
 
 .group-icon {
-  width: 52px;
-  height: 52px;
+  width: 55px;
+  height: 55px;
   border-radius: 999px;
   background: rgba(34, 197, 94, 0.16);
   display: flex;
@@ -260,7 +272,7 @@ select {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin-top: 22px;
+  margin-top: 20px;
 }
 
 .group-stats p {
@@ -276,7 +288,7 @@ select {
 .group-results {
   border-top: 1px solid #334155;
   margin-top: 20px;
-  padding-top: 16px;
+  padding-top: 15px;
   display: flex;
   justify-content: space-between;
   color: #cbd5e1;
@@ -372,51 +384,4 @@ select {
   justify-content: flex-end;
   gap: 12px;
   margin-top: 8px;
-}
-
-@media (max-width: 1000px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .groups-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .app-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-}
-
-@media (max-width: 600px) {
-  main {
-    padding: 18px;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .header-actions {
-    width: 100%;
-  }
-
-  .header-actions button {
-    flex: 1;
-  }
-
-  .chart-placeholder {
-    height: 180px;
-  }
-
-  .group-results {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .modal-actions {
-    flex-direction: column-reverse;
-  }
 }
