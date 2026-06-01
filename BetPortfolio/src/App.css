@@ -22,16 +22,16 @@ body,
 
 main {
   height: 100vh;
-  padding: 32px;
+  padding: 16px;
   margin: 0 auto;
-  overflow: hidden;
 }
 
 .app-header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 28px;
+  text-align: center;
+  gap: 16px;
 }
 
 .app-header h1 {
@@ -81,51 +81,40 @@ button:hover {
   border: 1px solid #334155;
 }
 
+.stats-section {
+  margin-top: 20px;
+}
+
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 15px;
-  margin-bottom: 20px;
+  margin: 20px 0;
+}
+
+.stats-grid p {
+  font-weight: bold;
 }
 
 .stat-card {
   background: linear-gradient(145deg, #172033, #101827);
   border: 1px solid #263449;
   border-radius: 18px;
-  padding: 15px;
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-}
-
-.stat-icon {
-  width: 55px;
-  height: 55px;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.12);
+  padding-top: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #22c55e;
-  font-size: 25px;
-  font-weight: bold;
-  flex-shrink: 0;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
 }
 
 .stat-card p {
   margin: 0;
-  color: #cbd5e1;
 }
 
 .stat-card h2 {
-  margin: 10px 0;
-  font-size: 25px;
-}
-
-.stat-card span {
-  color: #94a3b8;
-  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .pending-value {
@@ -137,7 +126,7 @@ button:hover {
   border: 1px solid #263449;
   border-radius: 18px;
   padding: 15px;
-  margin-bottom: 28px;
+  margin: 10px 0;
 }
 
 .chart-header {

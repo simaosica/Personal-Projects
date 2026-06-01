@@ -71,7 +71,7 @@ function App() {
   const totalBets = bets.length;
   const wonBets = bets.filter((bet) => bet.status === "won").length;
   const lostBets = bets.filter((bet) => bet.status === "lost").length;
-  const pendingBets = bets.filter((bet) => bet.status === "pending").length;
+  const [showStatsModal, setShowStatsModal] = useState(false);
 
   const totalStake = bets
     .filter((bet) => bet.status !== "pending")
@@ -150,10 +150,9 @@ function App() {
           <h1>
             Bet<span className="brand-highlight">Portfolio</span>
           </h1>
-          <p>Track. Analyze. Grow your betting edge.</p>
         </div>
 
-        <div className="header-actions">
+        {/* <div className="header-actions">
           <button className="blue-button" onClick={() => setIsAddBetModalOpen(true)}>
             Add Bet
           </button>
@@ -161,55 +160,48 @@ function App() {
           <button className="blue-button" onClick={() => setIsCreateGroupModalOpen(true)}>
             Create Group
           </button>
-        </div>
+        </div> */}
       </header>
 
-      <section className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon">↗</div>
-          <div>
-            <p>Total Profit</p>
-            <h2 className={getProfitClassName(totalProfit)}>
-              €{totalProfit.toFixed(2)}
-            </h2>
-            <span>All time</span>
+      <section className="stats-section">
+        <div className="section-header">
+          <h2>Your Stats</h2>
+          <button className="secondary-button" onClick={() => setShowStatsModal(true)}>
+            View All Stats →
+          </button>
+        </div>
+        <section className="chart-card">
+          <div className="chart-header">
+            <h2>Profit</h2>
+
+            <select>
+              <option>Last 30 Days</option>
+            </select>
           </div>
-        </div>
 
-        <div className="stat-card">
-          <div className="stat-icon">%</div>
-          <div>
-            <p>ROI</p>
-            <h2 className={getProfitClassName(roi)}>{roi.toFixed(1)}%</h2>
-            <span>Settled bets only</span>
+          <div className="chart-placeholder">
+            <div className="fake-chart-line"></div>
+            <p>Profit chart coming soon</p>
           </div>
-        </div>
+        </section>
 
-        <div className="stat-card">
-          <div className="stat-icon">▣</div>
-          <div>
-            <p>Total Bets</p>
-            <h2>{totalBets}</h2>
-            <span>
-              {wonBets} won / {lostBets} lost / {pendingBets} pending
-            </span>
+        <section className="stats-grid">
+          <div className="stat-card">
+            <div>
+              <p>Profit</p>
+              <h2 className={getProfitClassName(totalProfit)}>
+                €{totalProfit.toFixed(2)}
+              </h2>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <section className="chart-card">
-        <div className="chart-header">
-          <h2>Cumulative Profit</h2>
-
-          <select>
-            <option>All Groups</option>
-          </select>
-        </div>
-
-        <div className="chart-placeholder">
-          <div className="fake-chart-line"></div>
-          <p>Profit chart coming soon</p>
-        </div>
+          <div className="stat-card">
+            <div>
+              <p>ROI</p>
+              <h2 className={getProfitClassName(roi)}>{roi.toFixed(1)}%</h2>
+            </div>
+          </div>
+        </section>
       </section>
 
       <section className="groups-section">
@@ -291,25 +283,61 @@ function App() {
                       {groupRoi.toFixed(1)}%
                     </strong>
                   </div>
-
-                  <div>
-                    <p>Bets</p>
-                    <strong>{groupBets.length}</strong>
-                  </div>
                 </div>
 
                 <div className="group-results">
                   <span className="won-dot">Won {groupWonBets}</span>
                   <span className="lost-dot">Lost {groupLostBets}</span>
-                  <span className="pending-dot">
-                    Pending {groupPendingBets}
-                  </span>
+                  <span className="pending-dot">Pending {groupPendingBets}</span>
                 </div>
               </div>
             );
           })}
         </div>
       </section>
+
+      {showStatsModal && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <h2>All-time Statistics</h2>
+
+            <div className="stat-card">
+              <div>
+                <p>Total Profit</p>
+                <h2 className={getProfitClassName(totalProfit)}>
+                  €{totalProfit.toFixed(2)}
+                </h2>
+                <span>All time</span>
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div>
+                <p>ROI</p>
+                <h2 className={getProfitClassName(roi)}>{roi.toFixed(1)}%</h2>
+                <span>Settled bets only</span>
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div>
+                <p>Total Bets</p>
+                <h2>{totalBets}</h2>
+                <span>
+                  {wonBets} won / {lostBets} lost
+                </span>
+              </div>
+            </div>
+
+            <button
+              className="secondary-button"
+              onClick={() => setShowStatsModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {isCreateGroupModalOpen && (
         <div className="modal-backdrop">
