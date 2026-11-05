@@ -6,4 +6,3 @@ Welcome to my collection of personal projects!vThis repository serves as a centr
 
 ## 📂 Structure
 The repository is organized into subfolders, each containing an individual project.  
-Each project contains its own README with setup instructions and usage details.
