@@ -1,3 +1,6 @@
+from datetime import date
+from urllib.parse import urlsplit, urlunsplit, parse_qs, urlencode
+import re
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -5,59 +8,127 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
-def getTodayGamesAux(driver, league_name, league_url):
+
+
+
+
+def getTodayGamesAux(driver, league_name, league_url, selected_date):
+    import re
+    from datetime import datetime
+
     urls = []
+
     try:
         driver.delete_all_cookies()
-        #print(f"\n🔍 Checking league: {league_name}")
         driver.get(league_url)
 
-        wait = WebDriverWait(driver, 3)
+        wait = WebDriverWait(driver, 15)
 
-        # Wait for the "Today's Matches" tab
-        try:
-            jogos_hoje_title = wait.until(
-                EC.presence_of_element_located(
-                    (By.XPATH, '//div[@class="tabs__ear" and contains(text(), "Jogos de Hoje")]')
+        wait.until(
+            EC.presence_of_element_located((
+                By.CSS_SELECTOR, ".event__match"
+            ))
+        )
+
+        # Convert selected date to a comparable format
+        selected = datetime.strptime(
+            selected_date, "%Y-%m-%d"
+        ).date()
+
+        match_rows = driver.find_elements(
+            By.CSS_SELECTOR, ".event__match"
+        )
+
+        print(f"\nChecking {league_name}...")
+        print(f"Total results loaded: {len(match_rows)}")
+
+        dates_found = {}
+
+        for row in match_rows:
+
+            try:
+                # Extract date/time from the actual match row
+                time_element = row.find_element(
+                    By.CSS_SELECTOR,
+                    ".event__stageTime"
                 )
-            )
-        except TimeoutException:
-            #print(f"❌ No matches today in {league_name}.")
-            return []
 
-        # Access the main container (go up 3 levels)
-        jogos_hoje_container = jogos_hoje_title.find_element(By.XPATH, '../../..')
+                match_time = time_element.text.strip()
 
-        # Wait for at least one match link to be present
-        try:
-            wait.until(
-                EC.presence_of_element_located(
-                    (By.XPATH, './/div[contains(@id, "g_1_")]//a[contains(@href, "/jogo/futebol/")]')
+                # Example: 07.11. 20:00
+                match_date = re.search(
+                    r"(\d{1,2})\.(\d{1,2})\.",
+                    match_time
                 )
-            )
-        except TimeoutException:
-            print(f"⚠️ No visible matches found in {league_name}.")
-            return []
 
-        match_links = jogos_hoje_container.find_elements(By.XPATH, './/div[contains(@id, "g_1_")]//a[contains(@href, "/jogo/futebol/")]')
+                if not match_date:
+                    continue
 
-        for match in match_links:
-            href = match.get_attribute("href")
-            if href and "/jogo/futebol/" in href:
-                urls.append(href.split("#")[0])
+                day = int(match_date.group(1))
+                month = int(match_date.group(2))
 
-        if len(urls) == 0:
-            print(f"⚠️ No matches today in {league_name}. (No links found)")
-        #else:
-        #    print(f"✅ Found {len(urls)} match(es) today in {league_name}.")
+                # Use the year supplied by the user
+                actual_date = datetime(
+                    selected.year, month, day
+                ).date()
+
+                date_string = actual_date.isoformat()
+
+                dates_found[date_string] = (
+                    dates_found.get(date_string, 0) + 1
+                )
+
+                # Only collect matches from the selected date
+                if actual_date != selected:
+                    continue
+
+                # Extract match URL
+                match_link = row.find_element(
+                    By.CSS_SELECTOR,
+                    "a.eventRowLink"
+                )
+
+                href = match_link.get_attribute("href")
+
+                if href:
+                    urls.append(href.split("#")[0])
+
+            except Exception as e:
+                print(f"Could not process match row: {e}")
+                continue
+
+        # Remove duplicate URLs
+        urls = list(dict.fromkeys(urls))
+
+        print("\nResults found by date:")
+
+        for match_date, count in dates_found.items():
+            print(f"  {match_date}: {count} matches")
+
+        print(
+            f"\nMatches selected for {selected_date}: "
+            f"{len(urls)}"
+        )
 
         return urls
 
-    except Exception as e:
-        print(f"❌ Error processing {league_name}: {e}")
+    except TimeoutException:
+        print(f"No results loaded for {league_name}.")
         return []
 
-def getTodayGames():
+    except Exception as e:
+        print(f"Error processing {league_name}: {e}")
+        return []
+
+
+
+def getTodayGames(selected_date=None):
+
+    if selected_date is None:
+        selected_date = date.today().isoformat()
+
+    date.fromisoformat(selected_date)
+
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
@@ -68,27 +139,31 @@ def getTodayGames():
     driver = webdriver.Chrome(options=options)
 
     leagues = {
-        "Brazil Serie A": "https://www.flashscore.pt/futebol/brasil/serie-a/",
-        #"England Premier League": "https://www.flashscore.pt/futebol/inglaterra/premier-league/",
-        #"Spain La Liga": "https://www.flashscore.pt/futebol/espanha/laliga/",
-        #"Germany Bundesliga": "https://www.flashscore.pt/futebol/alemanha/bundesliga/",
-        #"Italy Serie A": "https://www.flashscore.pt/futebol/italia/serie-a/",
-        #"France Ligue 1": "https://www.flashscore.pt/futebol/franca/ligue-1/",
-        "Portugal Primeira Liga": "https://www.flashscore.pt/futebol/portugal/primeira-liga/",
-        #"UEFA Super Cup": "https://www.flashscore.pt/futebol/europa/super-taca-da-uefa/",
+        "Espanha La Liga":
+            "https://www.flashscore.pt/futebol/espanha/laliga/resultados/",
     }
 
     all_urls = []
+
     try:
         for league_name, url in leagues.items():
-            league_urls = getTodayGamesAux(driver, league_name, url)
+            league_urls = getTodayGamesAux(
+                driver,
+                league_name,
+                url,
+                selected_date
+            )
+
             all_urls.extend(league_urls)
+
     finally:
         driver.quit()
 
-    print(f"⚽ Number of matches to analyse today: {len(all_urls)}")
-    return all_urls
+    all_urls = list(dict.fromkeys(all_urls))
 
-# Para testar localmente
-#if __name__ == "__main__":
-#    jogos_de_hoje = getTodayGames()
+    print(
+        f"\nNumber of matches to analyse on "
+        f"{selected_date}: {len(all_urls)}"
+    )
+
+    return all_urls

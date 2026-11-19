@@ -129,27 +129,59 @@ def process_game(driver, base_url, game_index, total_games):
     return output
 
 
+
 def main():
+
     driver = create_headless_chrome_driver()
-    print(f"\n🌍 Getting today's games ({time.strftime('%d-%m-%Y')})...")
+    total_games = 0
 
     try:
-        game_urls = getTodayGames()
+        selected_date = input(
+            "\nEnter date to analyse (YYYY-MM-DD), "
+            "or press Enter for today: "
+        ).strip()
+
+        if not selected_date:
+            selected_date = time.strftime("%Y-%m-%d")
+
+        # Validate date
+        from datetime import date
+        date.fromisoformat(selected_date)
+
+        print(f"\nGetting games for {selected_date}...")
+
+        game_urls = getTodayGames(selected_date)
         total_games = len(game_urls)
 
+        if total_games == 0:
+            print("No games found for this date.")
+            return
+
         for game_index, base_url in enumerate(game_urls, 1):
-            output = process_game(driver, base_url, game_index, total_games)
+            output = process_game(
+                driver,
+                base_url,
+                game_index,
+                total_games
+            )
+
             print(output)
-            #asyncio.run(send_telegram_message(output))  # Uncomment to send telegram messages
+
+            # asyncio.run(send_telegram_message(output))
+
+    except ValueError:
+        print("Invalid date. Please use YYYY-MM-DD.")
 
     except Exception as e:
-        final_error_msg = f"❌ Error: {e}\n"
-        print(final_error_msg)
-        #asyncio.run(send_telegram_message(final_error_msg)) # Uncomment to send telegram messages
+        print(f"Error: {e}")
 
     finally:
         if total_games > 0:
-            print("\n⚠️ If there were any penalties, substitutions, VAR interventions, or red cards, we should ignore them.")
+            print(
+                "\nIf there were penalties, substitutions, "
+                "VAR interventions, or red cards, ignore them."
+            )
+
         driver.quit()
 
 
