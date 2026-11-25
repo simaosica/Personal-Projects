@@ -1,4 +1,4 @@
-
+# predictAddedTime.py
 import json
 import os
 import re
@@ -10,7 +10,7 @@ from google import genai
 
 load_dotenv()
 
-MODEL = "gemini-3.8-flash"
+MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 
 
 PREDICTION_SCHEMA = {

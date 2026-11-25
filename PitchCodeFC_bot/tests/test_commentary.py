@@ -1,6 +1,6 @@
 
-from browser import create_headless_chrome_driver
-from getCommentary import (
+from app.browser import create_headless_chrome_driver
+from app.services.commentary import (
     get_second_half_commentary,
     format_commentary
 )
