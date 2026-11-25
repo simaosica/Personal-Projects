@@ -62,8 +62,8 @@ def analyse_match(driver, match_url, timeout=15):
     if match["status"] != "second_half":
         status_messages = {
             "not_started": "The match has not started yet.",
-            "first_half": "The match is still in the first half.",
-            "half_time": "The match is currently at half-time.",
+            "first_half": "This match is still in the first half. You can request a second-half added-time prediction once the second half begins.",
+            "half_time": "The match is currently at half-time. You can request a second-half added-time prediction once the second half begins.",
             "extra_time": (
                 "The match is in extra time. "
                 "Second-half added-time prediction is not supported."

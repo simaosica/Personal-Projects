@@ -3,7 +3,12 @@ import os
 from urllib.parse import urlsplit
 
 from dotenv import load_dotenv
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import (
+    BotCommand,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Update,
+)
 from telegram.ext import (
     Application,
     ApplicationBuilder,
@@ -66,31 +71,66 @@ def _match_label(match):
     return f"{label} — {status}"
 
 
+
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.pop("active_match", None)
     context.user_data.pop("pending_matches", None)
+
     await update.effective_message.reply_text(
-        "Welcome to PitchCodeFC Bot!\n\n"
-        "Send a team matchup (e.g. Valencia vs Real Madrid) or a "
-        "Flashscore Portugal match URL.\n\n"
-        "After selecting a match, send /predict whenever you want a "
-        "fresh second-half added-time prediction.\n\n"
-        "Commands:\n"
-        "/predict — get or refresh the prediction\n"
-        "/match — show your selected match\n"
-        "/cancel — clear your selected match\n"
-        "/help — show these instructions"
+        "Welcome to PitchCodeFC Bot!\n"
+        "Your football added-time prediction assistant.\n\n"
+
+        "HOW TO USE\n\n"
+        "1. Send me a match, for example:\n"
+        "   Valencia vs Real Madrid\n\n"
+
+        "2. I'll search Flashscore for the live match.\n"
+        "   If multiple matches are found, select the correct one.\n\n"
+
+        "3. Once the match is selected, send /predict.\n"
+        "   I'll analyse the second-half commentary and estimate "
+        "how much added time the referee will announce.\n\n"
+
+        "You can request a fresh prediction whenever you want.\n\n"
+
+        "COMMANDS\n"
+        "/start - Start again\n"
+        "/help - Usage instructions\n"
+        "/match - Show selected match\n"
+        "/predict - Get an added-time prediction\n"
+        "/cancel - Clear selected match\n\n"
+
+        "Let's find a match!"
     )
+
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.effective_message.reply_text(
-        "Send a team matchup (e.g. Valencia vs Real Madrid) or a "
-        "Flashscore Portugal match URL.\n\n"
-        "/predict — get or refresh the prediction\n"
-        "/match — show your selected match\n"
-        "/cancel — clear your selected match\n"
-        "/help — show these instructions"
+        "PITCHCODEFC BOT — HELP\n\n"
+
+        "FIND A MATCH\n"
+        "Send a team matchup, for example:\n"
+        "Valencia vs Real Madrid\n\n"
+        "You can also send a Flashscore Portugal match URL.\n\n"
+
+        "GET A PREDICTION\n"
+        "After selecting a match, send /predict.\n"
+        "I'll analyse the second-half commentary and estimate "
+        "the total added time the referee will announce.\n\n"
+
+        "You can request another prediction at any time. "
+        "Each request uses the latest available match information.\n\n"
+
+        "AVAILABLE COMMANDS\n"
+        "/start - Display the welcome message\n"
+        "/help - Display these instructions\n"
+        "/match - Show your selected match\n"
+        "/predict - Generate a fresh prediction\n"
+        "/cancel - Clear your selected match\n\n"
+
+        "IMPORTANT\n"
+        "Predictions are estimates, not guarantees. "
     )
 
 
@@ -232,12 +272,26 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         raise
 
+async def post_init(application: Application):
+    await application.bot.set_my_commands([
+        BotCommand("start", "Welcome and instructions"),
+        BotCommand("help", "Show usage instructions"),
+        BotCommand("match", "Show your selected match"),
+        BotCommand("predict", "Predict second-half added time"),
+        BotCommand("cancel", "Clear your selected match"),
+    ])
+
 
 def main():
     if not BOT_TOKEN:
         raise ValueError("TELEGRAM_BOT_TOKEN is missing from your .env file.")
 
-    application: Application = ApplicationBuilder().token(BOT_TOKEN).build()
+    application: Application = (
+        ApplicationBuilder()
+        .token(BOT_TOKEN)
+        .post_init(post_init)
+        .build()
+    )
 
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(CommandHandler("help", help_command))
